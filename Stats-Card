@@ -1,0 +1,22 @@
+import React from "react";
+
+export default function StatsCard({ title, value, icon: Icon, subtitle, isLoading }) {
+  return (
+    <div className="neumorphic-card p-6">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+          {isLoading ? (
+            <div className="w-16 h-8 bg-gray-300 rounded animate-pulse"></div>
+          ) : (
+            <p className="text-3xl font-bold text-gray-800">{value.toLocaleString()}</p>
+          )}
+          <p className="text-xs text-gray-500 mt-2">{subtitle}</p>
+        </div>
+        <div className="neumorphic w-12 h-12 rounded-xl flex items-center justify-center">
+          <Icon className="w-6 h-6 text-gray-600" />
+        </div>
+      </div>
+    </div>
+  );
+}
