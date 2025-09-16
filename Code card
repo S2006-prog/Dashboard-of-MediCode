@@ -1,0 +1,55 @@
+import React from "react";
+import { Book, Globe, Tag, CheckCircle } from "lucide-react";
+
+export default function CodeCard({ code }) {
+  const getSystemIcon = (system) => {
+    return system === "NAMASTE" ? Book : Globe;
+  };
+
+  const getSystemColor = (system) => {
+    return system === "NAMASTE" ? "text-orange-600" : "text-blue-600";
+  };
+
+  const getCategoryColor = (category) => {
+    const colors = {
+      ayurveda: "bg-orange-100 text-orange-800",
+      siddha: "bg-green-100 text-green-800",
+      unani: "bg-purple-100 text-purple-800",
+      traditional_medicine: "bg-blue-100 text-blue-800",
+      biomedical: "bg-gray-100 text-gray-800"
+    };
+    return colors[category] || "bg-gray-100 text-gray-800";
+  };
+
+  const SystemIcon = getSystemIcon(code.system);
+
+  return (
+    <div className="neumorphic-button p-4 rounded-xl cursor-pointer">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div className={`neumorphic w-8 h-8 rounded-lg flex items-center justify-center`}>
+            <SystemIcon className={`w-4 h-4 ${getSystemColor(code.system)}`} />
+          </div>
+          <span className="font-mono text-sm font-semibold text-gray-700">{code.code}</span>
+        </div>
+        {code.status === 'active' && (
+          <CheckCircle className="w-5 h-5 text-green-500" />
+        )}
+      </div>
+      
+      <h4 className="font-semibold text-gray-800 mb-2 leading-tight">{code.display}</h4>
+      
+      <div className="flex items-center gap-2 mb-3">
+        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${getCategoryColor(code.category)}`}>
+          <Tag className="w-3 h-3" />
+          {code.category.replace(/_/g, ' ')}
+        </div>
+        <span className="text-xs text-gray-500 font-medium">{code.system}</span>
+      </div>
+
+      {code.definition && (
+        <p className="text-sm text-gray-600 line-clamp-2">{code.definition}</p>
+      )}
+    </div>
+  );
+}
