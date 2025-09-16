@@ -1,0 +1,54 @@
+import React from "react";
+import { Filter } from "lucide-react";
+
+export default function FilterPanel({ filters, onFiltersChange }) {
+  const handleFilterChange = (key, value) => {
+    onFiltersChange({
+      ...filters,
+      [key]: value
+    });
+  };
+
+  return (
+    <div className="flex flex-wrap gap-4">
+      <div className="flex items-center gap-2">
+        <Filter className="w-4 h-4 text-gray-500" />
+        <span className="text-sm font-medium text-gray-700">Filters:</span>
+      </div>
+      
+      <select
+        value={filters.system}
+        onChange={(e) => handleFilterChange('system', e.target.value)}
+        className="neumorphic-input px-4 py-2 rounded-lg focus:outline-none"
+      >
+        <option value="all">All Systems</option>
+        <option value="NAMASTE">NAMASTE</option>
+        <option value="ICD11_TM2">ICD-11 TM2</option>
+      </select>
+
+      <select
+        value={filters.category}
+        onChange={(e) => handleFilterChange('category', e.target.value)}
+        className="neumorphic-input px-4 py-2 rounded-lg focus:outline-none"
+      >
+        <option value="all">All Categories</option>
+        <option value="ayurveda">Ayurveda</option>
+        <option value="siddha">Siddha</option>
+        <option value="unani">Unani</option>
+        <option value="traditional_medicine">Traditional Medicine</option>
+        <option value="biomedical">Biomedical</option>
+      </select>
+
+      <select
+        value={filters.status}
+        onChange={(e) => handleFilterChange('status', e.target.value)}
+        className="neumorphic-input px-4 py-2 rounded-lg focus:outline-none"
+      >
+        <option value="all">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="deprecated">Deprecated</option>
+      </select>
+    </div>
+  );
+}
