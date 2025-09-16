@@ -1,0 +1,58 @@
+{
+  "name": "MedicalCode",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "The medical code identifier"
+    },
+    "system": {
+      "type": "string",
+      "enum": [
+        "NAMASTE",
+        "ICD11_TM2"
+      ],
+      "description": "The coding system"
+    },
+    "display": {
+      "type": "string",
+      "description": "Human readable description of the code"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ayurveda",
+        "siddha",
+        "unani",
+        "traditional_medicine",
+        "biomedical"
+      ],
+      "description": "Medical category"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "deprecated"
+      ],
+      "default": "active"
+    },
+    "definition": {
+      "type": "string",
+      "description": "Detailed definition of the code"
+    }
+  },
+  "required": [
+    "code",
+    "system",
+    "display"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
