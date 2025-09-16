@@ -1,0 +1,134 @@
+import React, { useState, useEffect } from "react";
+import { MedicalCode } from "@/entities/all";
+import { Search, Filter, Book, Stethoscope, Globe } from "lucide-react";
+
+import SearchBar from "../components/lookup/SearchBar";
+import CodeCard from "../components/lookup/CodeCard";
+import FilterPanel from "../components/lookup/FilterPanel";
+
+export default function CodeLookup() {
+  const [codes, setCodes] = useState([]);
+  const [filteredCodes, setFilteredCodes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    system: "all",
+    category: "all",
+    status: "active"
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadCodes();
+  }, []);
+
+  useEffect(() => {
+    // Move filtering logic directly into useEffect to avoid dependency issues
+    let filtered = codes;
+
+    if (searchTerm) {
+      filtered = filtered.filter(code =>
+        code.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        code.display.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (filters.system !== "all") {
+      filtered = filtered.filter(code => code.system === filters.system);
+    }
+
+    if (filters.category !== "all") {
+      filtered = filtered.filter(code => code.category === filters.category);
+    }
+
+    if (filters.status !== "all") {
+      filtered = filtered.filter(code => code.status === filters.status);
+    }
+
+    setFilteredCodes(filtered);
+  }, [searchTerm, filters, codes]);
+
+  const loadCodes = async () => {
+    setIsLoading(true);
+    try {
+      const codesData = await MedicalCode.list();
+      setCodes(codesData);
+    } catch (error) {
+      console.error("Error loading codes:", error);
+    }
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Code Lookup</h1>
+          <p className="text-gray-600">Search NAMASTE and ICD-11 TM2 medical codes</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="neumorphic-button px-4 py-2 rounded-lg">
+            <div className="flex items-center gap-2 text-gray-700">
+              <Book className="w-4 h-4" />
+              <span className="text-sm font-medium">NAMASTE: 4,500+ codes</span>
+            </div>
+          </div>
+          <div className="neumorphic-button px-4 py-2 rounded-lg">
+            <div className="flex items-center gap-2 text-gray-700">
+              <Globe className="w-4 h-4" />
+              <span className="text-sm font-medium">ICD-11: 2,800+ codes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="neumorphic-card p-6">
+        <SearchBar 
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
+        <FilterPanel 
+          filters={filters}
+          onFiltersChange={setFilters}
+        />
+      </div>
+
+      {/* Results */}
+      <div className="neumorphic-card p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-gray-800">
+            Search Results ({filteredCodes.length})
+          </h3>
+        </div>
+
+        {isLoading ? (
+          <div className="grid md:grid-cols-2 gap-4">
+            {Array(6).fill(0).map((_, i) => (
+              <div key={i} className="neumorphic p-4 rounded-xl animate-pulse">
+                <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                <div className="h-6 bg-gray-300 rounded mb-3"></div>
+                <div className="h-3 bg-gray-300 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-4">
+            {filteredCodes.map((code) => (
+              <CodeCard 
+                key={code.id}
+                code={code}
+              />
+            ))}
+            {filteredCodes.length === 0 && (
+              <div className="col-span-2 text-center py-12">
+                <Stethoscope className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">No codes found matching your criteria</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
