@@ -1,0 +1,58 @@
+import React from "react";
+import { Clock, FileText, User, Link2 } from "lucide-react";
+
+const activities = [
+  {
+    type: "code_added",
+    title: "New NAMASTE code added",
+    description: "Vata Dosha Imbalance (N001.234) mapped to ICD-11",
+    time: "2 minutes ago",
+    icon: FileText
+  },
+  {
+    type: "patient_registered",
+    title: "Patient record created",
+    description: "Dual coding applied for traditional Ayurveda diagnosis",
+    time: "15 minutes ago",
+    icon: User
+  },
+  {
+    type: "mapping_verified",
+    title: "Code mapping verified",
+    description: "Siddha respiratory condition mapping approved",
+    time: "1 hour ago",
+    icon: Link2
+  },
+  {
+    type: "code_added",
+    title: "ICD-11 TM2 codes imported",
+    description: "45 new traditional medicine codes synchronized",
+    time: "3 hours ago",
+    icon: FileText
+  }
+];
+
+export default function RecentActivity() {
+  return (
+    <div className="neumorphic-card p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <Clock className="w-5 h-5 text-gray-600" />
+        <h3 className="text-xl font-bold text-gray-800">Recent Activity</h3>
+      </div>
+      
+      <div className="space-y-4">
+        {activities.map((activity, index) => (
+          <div key={index} className="flex items-start gap-4 p-4 neumorphic rounded-xl">
+            <div className="neumorphic w-10 h-10 rounded-full flex items-center justify-center">
+              <activity.icon className="w-5 h-5 text-gray-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold text-gray-800">{activity.title}</h4>
+              <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+              <p className="text-xs text-gray-500 mt-2">{activity.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
